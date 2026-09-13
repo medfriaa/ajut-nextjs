@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { prisma } from "@/lib/prisma";
 import CompleteButton from "./CompleteButton";
 import PayButton from "./PayButton";
