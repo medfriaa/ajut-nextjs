@@ -1,0 +1,168 @@
+// Foloseste SQLite ca sa poti rula proiectul local fara sa instalezi Postgres.
+// Pentru productie, schimba doar linia "provider" in "postgresql" si
+// DATABASE_URL in .env catre baza ta reala (Supabase/Railway) - schema ramane identica.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model City {
+  id       String  @id @default(cuid())
+  name     String
+  slug     String  @unique
+  isActive Boolean @default(false)
+  areas     Area[]
+  jobs      Job[]
+  providers ProviderProfile[]
+}
+
+model Area {
+  id     String @id @default(cuid())
+  cityId String
+  city   City   @relation(fields: [cityId], references: [id])
+  name   String
+  jobs   Job[]
+  providerAreas ProviderServiceArea[]
+}
+
+model ServiceCategory {
+  id       String  @id @default(cuid())
+  name     String
+  slug     String  @unique
+  icon     String?
+  isActive Boolean @default(true)
+  jobs     Job[]
+  providerCategories ProviderCategory[]
+}
+
+model ProviderProfile {
+  id                 String   @id @default(cuid())
+  fullName           String
+  phone              String
+  email              String   @unique
+  cityId             String
+  city               City     @relation(fields: [cityId], references: [id])
+  bio                String?
+  experienceYears    Int      @default(0)
+  verificationStatus String   @default("PENDING") // PENDING | VERIFIED | REJECTED
+  avgRating          Float    @default(0)
+  reviewCount        Int      @default(0)
+  responseRate       Float    @default(0)
+  completedJobsCount Int      @default(0)
+  earnings           Float    @default(0)
+  createdAt          DateTime @default(now())
+
+  serviceAreas ProviderServiceArea[]
+  categories   ProviderCategory[]
+  offers       JobOffer[]
+  bookings     Booking[]
+}
+
+model ProviderServiceArea {
+  providerId String
+  provider   ProviderProfile @relation(fields: [providerId], references: [id])
+  areaId     String
+  area       Area            @relation(fields: [areaId], references: [id])
+
+  @@id([providerId, areaId])
+}
+
+model ProviderCategory {
+  providerId String
+  provider   ProviderProfile @relation(fields: [providerId], references: [id])
+  categoryId String
+  category   ServiceCategory @relation(fields: [categoryId], references: [id])
+
+  @@id([providerId, categoryId])
+}
+
+model Job {
+  id             String   @id @default(cuid())
+  customerName   String
+  customerPhone  String
+  customerEmail  String?
+  categoryId     String
+  category       ServiceCategory @relation(fields: [categoryId], references: [id])
+  cityId         String
+  city           City     @relation(fields: [cityId], references: [id])
+  areaId         String?
+  area           Area?    @relation(fields: [areaId], references: [id])
+  title          String
+  description    String
+  budgetAmount   Float?
+  preferredWhen  String?
+  status         String   @default("OPEN") // OPEN | MATCHED | ACCEPTED | COMPLETED | CANCELLED | DISPUTED
+  createdAt      DateTime @default(now())
+
+  offers  JobOffer[]
+  booking Booking?
+}
+
+model JobOffer {
+  id         String   @id @default(cuid())
+  jobId      String
+  job        Job      @relation(fields: [jobId], references: [id])
+  providerId String
+  provider   ProviderProfile @relation(fields: [providerId], references: [id])
+  status     String   @default("PENDING") // PENDING | ACCEPTED | DECLINED | EXPIRED
+  createdAt  DateTime @default(now())
+}
+
+model Booking {
+  id          String   @id @default(cuid())
+  jobId       String   @unique
+  job         Job      @relation(fields: [jobId], references: [id])
+  providerId  String
+  provider    ProviderProfile @relation(fields: [providerId], references: [id])
+  agreedPrice Float
+  status      String   @default("CONFIRMED") // CONFIRMED | IN_PROGRESS | COMPLETED | CANCELLED
+  confirmedAt DateTime @default(now())
+
+  messages Message[]
+  payment  Payment?
+  reviews  Review[]
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  bookingId String
+  booking   Booking  @relation(fields: [bookingId], references: [id])
+  sender    String   // "customer" | "provider"
+  body      String
+  createdAt DateTime @default(now())
+}
+
+model Payment {
+  id                       String   @id @default(cuid())
+  bookingId                String   @unique
+  booking                  Booking  @relation(fields: [bookingId], references: [id])
+  amountTotal              Float
+  platformCommissionAmount Float
+  providerPayoutAmount     Float
+  commissionPercentApplied Float
+  stripePaymentIntentId    String?
+  stripeCheckoutSessionId  String?
+  status                   String   @default("PENDING") // PENDING | HELD | RELEASED | REFUNDED
+  createdAt                DateTime @default(now())
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  bookingId String
+  booking   Booking  @relation(fields: [bookingId], references: [id])
+  rating    Int
+  comment   String?
+  direction String   // CUSTOMER_TO_PROVIDER | PROVIDER_TO_CUSTOMER
+  createdAt DateTime @default(now())
+}
+
+model PlatformSettings {
+  id                String   @id @default(cuid())
+  commissionPercent Float    @default(15)
+  updatedAt         DateTime @updatedAt
+}
