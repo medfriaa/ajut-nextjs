@@ -4,6 +4,18 @@ import Link from "next/link";
 import AcceptButton from "./AcceptButton";
 import ConnectButton from "./ConnectButton";
 
+function getEmbedUrl(url: string) {
+  if (url.includes("youtube.com/watch?v=")) {
+    const id = url.split("v=")[1]?.split("&")[0];
+    return "https://www.youtube.com/embed/" + id;
+  }
+  if (url.includes("youtu.be/")) {
+    const id = url.split("youtu.be/")[1]?.split("?")[0];
+    return "https://www.youtube.com/embed/" + id;
+  }
+  return null;
+}
+
 export default async function ProviderDashboard() {
   const providerId = cookies().get("ajut_provider_id")?.value;
 
@@ -39,6 +51,8 @@ export default async function ProviderDashboard() {
     orderBy: { confirmedAt: "desc" },
   });
 
+  const embedUrl = provider.introVideoUrl ? getEmbedUrl(provider.introVideoUrl) : null;
+
   return (
     <div className="pt-4">
       <h2 className="font-serif text-[22px] font-medium mb-2">Bun venit inapoi, {provider.fullName}</h2>
@@ -47,6 +61,17 @@ export default async function ProviderDashboard() {
       </span>
 
       <ConnectButton providerId={provider.id} onboarded={provider.stripeOnboarded} />
+
+      {embedUrl && (
+        <div className="mt-3 rounded-xl overflow-hidden border border-border" style={{ aspectRatio: "16/9" }}>
+          <iframe src={embedUrl} className="w-full h-full" allowFullScreen title="Video de prezentare" />
+        </div>
+      )}
+      {provider.introVideoUrl && !embedUrl && (
+        <a href={provider.introVideoUrl} target="_blank" className="block mt-3 text-sm text-forestDark underline">
+          Vezi videoul de prezentare
+        </a>
+      )}
 
       <div className="grid grid-cols-2 gap-2.5 mt-4 mb-2">
         <div className="bg-white border border-border rounded-xl p-3.5">
