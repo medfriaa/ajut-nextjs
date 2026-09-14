@@ -1,24 +1,17 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import HeroIllustration from "./HeroIllustration";
+import CinematicHero from "./CinematicHero";
+import ProblemStory from "./ProblemStory";
 
 export default async function HomePage() {
   const categories = await prisma.serviceCategory.findMany({ where: { isActive: true } });
 
   return (
     <div>
-      <section className="pt-6 pb-2">
-        <h1 className="font-serif text-[30px] leading-[1.15] font-medium mb-3">
-          Ai nevoie de un meseriaș?
-        </h1>
-        <p className="text-[15px] text-muted mb-5 max-w-[320px]">
-          AJUT te ajută să găsești rapid un profesionist de încredere pentru casa ta, direct în Arad.
-        </p>
+      <CinematicHero />
+      <ProblemStory />
 
-        <div className="mb-6 -mx-2" style={{ animation: "heroFloat 6s ease-in-out infinite" }}>
-          <HeroIllustration />
-        </div>
-
+      <section className="pt-8 pb-2">
         <div className="flex flex-col gap-3">
           <Link href="/solicita-serviciu" className="bg-forest text-white text-center font-semibold rounded-[10px] py-3.5">
             Solicită un serviciu
@@ -77,13 +70,6 @@ export default async function HomePage() {
           </div>
         ))}
       </div>
-
-      <style>{`
-        @keyframes heroFloat {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-8px) rotate(0.5deg); }
-        }
-      `}</style>
     </div>
   );
 }
