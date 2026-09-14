@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import AcceptButton from "./AcceptButton";
+import ConnectButton from "./ConnectButton";
 
 export default async function ProviderDashboard() {
   const providerId = cookies().get("ajut_provider_id")?.value;
@@ -9,9 +10,9 @@ export default async function ProviderDashboard() {
   if (!providerId) {
     return (
       <div className="pt-10 text-center">
-        <p className="text-sm text-muted mb-4">Trebuie să intri în cont pentru a-ți vedea dashboard-ul.</p>
+        <p className="text-sm text-muted mb-4">Trebuie sa intri in cont pentru a-ti vedea dashboard-ul.</p>
         <Link href="/prestator/login" className="inline-block bg-forest text-white font-semibold rounded-[10px] px-5 py-3">
-          Intră în cont
+          Intra in cont
         </Link>
       </div>
     );
@@ -20,7 +21,7 @@ export default async function ProviderDashboard() {
   const provider = await prisma.providerProfile.findUnique({ where: { id: providerId } });
 
   if (!provider) {
-    return <div className="text-center text-muted text-sm py-10">Contul nu a fost găsit. Încearcă să te reautentifici.</div>;
+    return <div className="text-center text-muted text-sm py-10">Contul nu a fost gasit. Incearca sa te reautentifici.</div>;
   }
 
   const categoryLinks = await prisma.providerCategory.findMany({ where: { providerId: provider.id } });
@@ -40,21 +41,21 @@ export default async function ProviderDashboard() {
 
   return (
     <div className="pt-4">
-      <h2 className="font-serif text-[22px] font-medium mb-2">Bun venit înapoi, {provider.fullName}</h2>
-      <span className={`inline-block text-[11px] font-semibold px-2.5 py-1 rounded-full ${
-        provider.verificationStatus === "VERIFIED" ? "bg-forestLight text-forestDark" : "bg-amberLight text-[#8A6D2E]"
-      }`}>
-        {provider.verificationStatus === "VERIFIED" ? "✓ Prestator verificat" : "În așteptare verificare"}
+      <h2 className="font-serif text-[22px] font-medium mb-2">Bun venit inapoi, {provider.fullName}</h2>
+      <span className={"inline-block text-[11px] font-semibold px-2.5 py-1 rounded-full " + (provider.verificationStatus === "VERIFIED" ? "bg-forestLight text-forestDark" : "bg-amberLight text-[#8A6D2E]")}>
+        {provider.verificationStatus === "VERIFIED" ? "Prestator verificat" : "In asteptare verificare"}
       </span>
+
+      <ConnectButton providerId={provider.id} onboarded={provider.stripeOnboarded} />
 
       <div className="grid grid-cols-2 gap-2.5 mt-4 mb-2">
         <div className="bg-white border border-border rounded-xl p-3.5">
           <div className="font-serif text-xl font-medium">{provider.earnings} lei</div>
-          <div className="text-[11.5px] text-muted mt-0.5">câștiguri (net)</div>
+          <div className="text-[11.5px] text-muted mt-0.5">castiguri (net)</div>
         </div>
         <div className="bg-white border border-border rounded-xl p-3.5">
           <div className="font-serif text-xl font-medium">{provider.completedJobsCount}</div>
-          <div className="text-[11.5px] text-muted mt-0.5">lucrări finalizate</div>
+          <div className="text-[11.5px] text-muted mt-0.5">lucrari finalizate</div>
         </div>
       </div>
 
@@ -65,9 +66,9 @@ export default async function ProviderDashboard() {
       <div className="flex flex-col gap-3">
         {matchedJobs.map((job) => (
           <div key={job.id} className="bg-white border border-border rounded-card p-4 shadow-sm">
-            <div className="font-semibold text-[15px]">JOB NOU · {job.category.name}</div>
-            <p className="text-[13px] text-muted mt-1">{job.area?.name ?? ""}, {job.city.name} · {job.preferredWhen}</p>
-            <p className="text-[13px] text-muted">Buget client: {job.budgetAmount ? `${job.budgetAmount} lei` : "nespecificat"}</p>
+            <div className="font-semibold text-[15px]">JOB NOU - {job.category.name}</div>
+            <p className="text-[13px] text-muted mt-1">{job.area ? job.area.name : ""}, {job.city.name} - {job.preferredWhen}</p>
+            <p className="text-[13px] text-muted">Buget client: {job.budgetAmount ? job.budgetAmount + " lei" : "nespecificat"}</p>
             <AcceptButton jobId={job.id} providerId={provider.id} />
           </div>
         ))}
@@ -82,7 +83,7 @@ export default async function ProviderDashboard() {
             </div>
             {b.payment && (
               <div className="text-[13px] text-muted mt-1">
-                Încasat: {b.payment.providerPayoutAmount} lei (comision {b.payment.commissionPercentApplied}%)
+                Incasat: {b.payment.providerPayoutAmount} lei (comision {b.payment.commissionPercentApplied}%)
               </div>
             )}
           </div>
