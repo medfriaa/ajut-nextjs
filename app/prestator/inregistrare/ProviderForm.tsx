@@ -21,6 +21,7 @@ export default function ProviderForm({
     cityId: cities[0]?.id || "",
     experienceYears: "",
     bio: "",
+    introVideoUrl: "",
   });
 
   function update<K extends keyof typeof form>(key: K, value: string) {
@@ -34,7 +35,7 @@ export default function ProviderForm({
   async function submit() {
     setError("");
     if (!form.fullName.trim() || !form.phone.trim() || !form.email.trim() || selectedCats.length === 0) {
-      setError("Completează numele, telefonul, emailul și alege cel puțin o categorie.");
+      setError("Completeaza numele, telefonul, emailul si alege cel putin o categorie.");
       return;
     }
     setSubmitting(true);
@@ -46,7 +47,7 @@ export default function ProviderForm({
     setSubmitting(false);
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
-      setError(data.error || "A apărut o eroare.");
+      setError(data.error || "A aparut o eroare.");
       return;
     }
     router.push("/prestator/cont?pending=1");
@@ -56,7 +57,7 @@ export default function ProviderForm({
     <div className="pt-4">
       <h2 className="font-serif text-[22px] font-medium mb-1">Devino prestator</h2>
       <p className="text-[13px] text-muted mb-4">
-        Completează profilul pentru a primi cereri de lucru din Arad.
+        Completeaza profilul pentru a primi cereri de lucru din Arad.
       </p>
       {error && <div className="text-sm text-danger mb-3">{error}</div>}
       <input className="w-full border border-border rounded-xl p-3.5 mb-3" placeholder="Nume complet"
@@ -70,19 +71,22 @@ export default function ProviderForm({
       <div className="grid grid-cols-2 gap-2.5 mb-3">
         {categories.map((c) => (
           <button key={c.id} type="button" onClick={() => toggleCat(c.id)}
-            className={`border-[1.5px] rounded-xl p-3 text-sm font-medium ${
-              selectedCats.includes(c.id) ? "border-forest bg-forestLight text-forestDark" : "border-border bg-white"
-            }`}>
+            className={"border-[1.5px] rounded-xl p-3 text-sm font-medium " + (selectedCats.includes(c.id) ? "border-forest bg-forestLight text-forestDark" : "border-border bg-white")}>
             {c.icon} {c.name}
           </button>
         ))}
       </div>
 
-      <input className="w-full border border-border rounded-xl p-3.5 mb-3" placeholder="Ani de experiență (ex: 5)"
+      <input className="w-full border border-border rounded-xl p-3.5 mb-3" placeholder="Ani de experienta (ex: 5)"
         value={form.experienceYears} onChange={(e) => update("experienceYears", e.target.value)} />
-      <textarea className="w-full border border-border rounded-xl p-3.5 mb-4 min-h-[90px]"
-        placeholder="Scurtă descriere a experienței tale"
+      <textarea className="w-full border border-border rounded-xl p-3.5 mb-3 min-h-[90px]"
+        placeholder="Scurta descriere a experientei tale"
         value={form.bio} onChange={(e) => update("bio", e.target.value)} />
+
+      <div className="text-sm font-semibold mb-2">Video de prezentare (optional)</div>
+      <input className="w-full border border-border rounded-xl p-3.5 mb-1" placeholder="Link YouTube sau Instagram"
+        value={form.introVideoUrl} onChange={(e) => update("introVideoUrl", e.target.value)} />
+      <p className="text-[12px] text-muted mb-4">Un scurt video in care te prezinti creste increderea clientilor.</p>
 
       <button disabled={submitting} onClick={submit}
         className="w-full bg-forest text-white font-semibold rounded-[10px] py-3.5 disabled:opacity-60">

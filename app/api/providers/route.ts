@@ -10,9 +10,9 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const { fullName, phone, email, cityId, bio, experienceYears, categoryIds } = await req.json();
+  const { fullName, phone, email, cityId, bio, experienceYears, categoryIds, introVideoUrl } = await req.json();
 
-  if (!fullName || !phone || !email || !cityId || !categoryIds?.length) {
+  if (!fullName || !phone || !email || !cityId || !categoryIds || categoryIds.length === 0) {
     return NextResponse.json({ error: "Completeaza toate campurile obligatorii." }, { status: 400 });
   }
 
@@ -24,6 +24,7 @@ export async function POST(req: NextRequest) {
       cityId,
       bio,
       experienceYears: experienceYears ? Number(experienceYears) : 0,
+      introVideoUrl: introVideoUrl || null,
       verificationStatus: "PENDING",
       categories: { create: categoryIds.map((id: string) => ({ categoryId: id })) },
     },
