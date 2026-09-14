@@ -21,7 +21,6 @@ export default function ProviderForm({
     cityId: cities[0]?.id || "",
     experienceYears: "",
     bio: "",
-    introVideoUrl: "",
   });
 
   function update<K extends keyof typeof form>(key: K, value: string) {
@@ -79,14 +78,9 @@ export default function ProviderForm({
 
       <input className="w-full border border-border rounded-xl p-3.5 mb-3" placeholder="Ani de experienta (ex: 5)"
         value={form.experienceYears} onChange={(e) => update("experienceYears", e.target.value)} />
-      <textarea className="w-full border border-border rounded-xl p-3.5 mb-3 min-h-[90px]"
+      <textarea className="w-full border border-border rounded-xl p-3.5 mb-4 min-h-[90px]"
         placeholder="Scurta descriere a experientei tale"
         value={form.bio} onChange={(e) => update("bio", e.target.value)} />
-
-      <div className="text-sm font-semibold mb-2">Video de prezentare (optional)</div>
-      <input className="w-full border border-border rounded-xl p-3.5 mb-1" placeholder="Link YouTube sau Instagram"
-        value={form.introVideoUrl} onChange={(e) => update("introVideoUrl", e.target.value)} />
-      <p className="text-[12px] text-muted mb-4">Un scurt video in care te prezinti creste increderea clientilor.</p>
 
       <button disabled={submitting} onClick={submit}
         className="w-full bg-forest text-white font-semibold rounded-[10px] py-3.5 disabled:opacity-60">
