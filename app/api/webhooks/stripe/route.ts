@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     if (bookingId) {
       const payment = await prisma.payment.update({
         where: { bookingId: bookingId },
-        data: { status: "RELEASED", stripePaymentIntentId: session.payment_intent },
+        data: { status: "RELEASED", stripePaymentIntentId: session.payment_intent as string },
       });
 
       const bookingBefore = await prisma.booking.findUniqueOrThrow({ where: { id: bookingId } });
