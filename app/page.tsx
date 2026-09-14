@@ -7,11 +7,11 @@ export default async function HomePage() {
   return (
     <div>
       <section className="pt-6 pb-2">
-        <h1 className="font-serif text-[32px] leading-[1.15] font-medium mb-3">
-          Ai o treabă.<br />Găsim omul.
+        <h1 className="font-serif text-[30px] leading-[1.15] font-medium mb-3">
+          Ai nevoie de un meseriaș?
         </h1>
         <p className="text-[15px] text-muted mb-6 max-w-[320px]">
-          Găsește rapid persoane de încredere pentru lucrările de care ai nevoie, direct în Arad.
+          AJUT te ajută să găsești rapid un profesionist de încredere pentru casa ta, direct în Arad.
         </p>
         <div className="flex flex-col gap-3">
           <Link href="/solicita-serviciu" className="bg-forest text-white text-center font-semibold rounded-[10px] py-3.5">
@@ -50,13 +50,27 @@ export default async function HomePage() {
           "Plătești și lași o recenzie",
         ].map((step, i) => (
           <li key={i} className="flex gap-3.5 py-3.5 border-b border-border last:border-0">
-            <div className="w-6.5 h-6.5 min-w-[26px] h-[26px] rounded-full bg-forestLight text-forestDark text-xs font-semibold flex items-center justify-center">
+            <div className="w-[26px] h-[26px] min-w-[26px] rounded-full bg-forestLight text-forestDark text-xs font-semibold flex items-center justify-center">
               {i + 1}
             </div>
             <div className="text-[14.5px] pt-0.5">{step}</div>
           </li>
         ))}
       </ol>
+
+      <div className="text-sm text-muted font-medium mt-7 mb-3">De ce AJUT?</div>
+      <div className="grid grid-cols-2 gap-2.5 mb-4">
+        {[
+          "Plată securizată",
+          "Proces simplu",
+          "Preț clar",
+          "Recenzii după finalizare",
+        ].map((item) => (
+          <div key={item} className="bg-white border border-border rounded-xl p-3 text-[12.5px] font-medium flex items-center gap-2">
+            <span className="text-forest">✓</span> {item}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
