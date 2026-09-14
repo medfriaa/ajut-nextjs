@@ -1,7 +1,3 @@
-// Foloseste SQLite ca sa poti rula proiectul local fara sa instalezi Postgres.
-// Pentru productie, schimba doar linia "provider" in "postgresql" si
-// DATABASE_URL in .env catre baza ta reala (Supabase/Railway) - schema ramane identica.
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -49,7 +45,9 @@ model ProviderProfile {
   city               City     @relation(fields: [cityId], references: [id])
   bio                String?
   experienceYears    Int      @default(0)
-  verificationStatus String   @default("PENDING") // PENDING | VERIFIED | REJECTED
+  verificationStatus String   @default("PENDING")
+  stripeAccountId    String?
+  stripeOnboarded    Boolean  @default(false)
   avgRating          Float    @default(0)
   reviewCount        Int      @default(0)
   responseRate       Float    @default(0)
@@ -96,7 +94,7 @@ model Job {
   description    String
   budgetAmount   Float?
   preferredWhen  String?
-  status         String   @default("OPEN") // OPEN | MATCHED | ACCEPTED | COMPLETED | CANCELLED | DISPUTED
+  status         String   @default("OPEN")
   createdAt      DateTime @default(now())
 
   offers  JobOffer[]
@@ -109,7 +107,7 @@ model JobOffer {
   job        Job      @relation(fields: [jobId], references: [id])
   providerId String
   provider   ProviderProfile @relation(fields: [providerId], references: [id])
-  status     String   @default("PENDING") // PENDING | ACCEPTED | DECLINED | EXPIRED
+  status     String   @default("PENDING")
   createdAt  DateTime @default(now())
 }
 
@@ -120,7 +118,7 @@ model Booking {
   providerId  String
   provider    ProviderProfile @relation(fields: [providerId], references: [id])
   agreedPrice Float
-  status      String   @default("CONFIRMED") // CONFIRMED | IN_PROGRESS | COMPLETED | CANCELLED
+  status      String   @default("CONFIRMED")
   confirmedAt DateTime @default(now())
 
   messages Message[]
@@ -132,7 +130,7 @@ model Message {
   id        String   @id @default(cuid())
   bookingId String
   booking   Booking  @relation(fields: [bookingId], references: [id])
-  sender    String   // "customer" | "provider"
+  sender    String
   body      String
   createdAt DateTime @default(now())
 }
@@ -147,7 +145,7 @@ model Payment {
   commissionPercentApplied Float
   stripePaymentIntentId    String?
   stripeCheckoutSessionId  String?
-  status                   String   @default("PENDING") // PENDING | HELD | RELEASED | REFUNDED
+  status                   String   @default("PENDING")
   createdAt                DateTime @default(now())
 }
 
@@ -157,7 +155,7 @@ model Review {
   booking   Booking  @relation(fields: [bookingId], references: [id])
   rating    Int
   comment   String?
-  direction String   // CUSTOMER_TO_PROVIDER | PROVIDER_TO_CUSTOMER
+  direction String
   createdAt DateTime @default(now())
 }
 
