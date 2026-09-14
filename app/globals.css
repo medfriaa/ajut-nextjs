@@ -25,3 +25,65 @@ a:active, button:active {
 ::selection {
   background: #E7F0EA;
 }
+
+.ambient-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ambient-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.35;
+  will-change: transform;
+}
+
+.ambient-blob-1 {
+  width: 280px;
+  height: 280px;
+  background: #2F6B4F;
+  top: -60px;
+  left: -80px;
+  animation: float1 18s ease-in-out infinite;
+}
+
+.ambient-blob-2 {
+  width: 220px;
+  height: 220px;
+  background: #E0973A;
+  top: 30%;
+  right: -60px;
+  animation: float2 22s ease-in-out infinite;
+}
+
+.ambient-blob-3 {
+  width: 200px;
+  height: 200px;
+  background: #2F6B4F;
+  bottom: -40px;
+  left: 20%;
+  animation: float3 26s ease-in-out infinite;
+}
+
+@keyframes float1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(40px, 60px) scale(1.1); }
+}
+
+@keyframes float2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-30px, 50px) scale(0.95); }
+}
+
+@keyframes float3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(30px, -40px) scale(1.08); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient-blob { animation: none; }
+}
