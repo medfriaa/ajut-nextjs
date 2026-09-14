@@ -25,12 +25,6 @@ export default function ParallaxBackground() {
       <div className="ambient-blob ambient-blob-1 parallax-el"></div>
       <div className="ambient-blob ambient-blob-2 parallax-el"></div>
       <div className="ambient-blob ambient-blob-3 parallax-el"></div>
-      <div className="ambient-icon ambient-icon-1 parallax-el">🔧</div>
-      <div className="ambient-icon ambient-icon-2 parallax-el">🌿</div>
-      <div className="ambient-icon ambient-icon-3 parallax-el">🧹</div>
-      <div className="ambient-icon ambient-icon-4 parallax-el">🎨</div>
-      <div className="ambient-icon ambient-icon-5 parallax-el">🪑</div>
-      <div className="ambient-icon ambient-icon-6 parallax-el">🚿</div>
     </div>
   );
 }
