@@ -1,5 +1,6 @@
 import "./globals.css";
 import Link from "next/link";
+import ParallaxBackground from "./ParallaxBackground";
 
 export const metadata = {
   title: "Ajut.ro — Ai nevoie de un meseriaș?",
@@ -10,11 +11,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ro">
       <body className="font-sans">
-        <div className="ambient-bg">
-          <div className="ambient-blob ambient-blob-1"></div>
-          <div className="ambient-blob ambient-blob-2"></div>
-          <div className="ambient-blob ambient-blob-3"></div>
-        </div>
+        <ParallaxBackground />
         <div className="max-w-[480px] mx-auto min-h-screen pb-20 relative">
           <header className="flex items-center justify-between px-5 pt-5 pb-2 sticky top-0 bg-bg/80 backdrop-blur-md z-40">
             <Link href="/" className="font-serif text-xl font-semibold text-forestDark tracking-tight">

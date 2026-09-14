@@ -87,3 +87,7 @@ a:active, button:active {
 @media (prefers-reduced-motion: reduce) {
   .ambient-blob { animation: none; }
 }
+
+.parallax-el {
+  transform: translateY(var(--scrollY, 0px));
+}
