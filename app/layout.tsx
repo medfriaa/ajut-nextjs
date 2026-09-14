@@ -1,3 +1,4 @@
+import ScrollGuide from "./ScrollGuide";
 import "./globals.css";
 import Link from "next/link";
 import ParallaxBackground from "./ParallaxBackground";
