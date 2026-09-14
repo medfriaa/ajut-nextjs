@@ -1,6 +1,8 @@
 import "./globals.css";
 import Link from "next/link";
 import ParallaxBackground from "./ParallaxBackground";
+import CustomCursor from "./CustomCursor";
+import AjutMark from "./AjutMark";
 
 export const metadata = {
   title: "Ajut.ro — Ai nevoie de un meseriaș?",
@@ -11,6 +13,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ro">
       <body className="font-sans">
+        <CustomCursor />
+        <AjutMark />
         <ParallaxBackground />
         <div className="max-w-[480px] mx-auto min-h-screen pb-20 relative">
           <header className="flex items-center justify-between px-5 pt-5 pb-2 sticky top-0 bg-bg/80 backdrop-blur-md z-40">
